@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        ul {
+            list-style: none
+        }
+
+        img {
+            vertical-align: top
+        }
+
+        .box {
+            width: 490px;
+            height: 170px;
+            margin: 100px auto;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .inner {
+            width: 490px;
+            height: 170px;
+            background-color: pink;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .inner ul {
+            width: 1000%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .inner li {
+            float: left;
+        }
+
+        .square {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .square span {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: #fff;
+            text-align: center;
+            line-height: 16px;
+            cursor: pointer;
+        }
+
+        .square span.current {
+            background-color: orangered;
+            color: #fff;
+        }
+    </style>
+    <script src="animate.js"></script>
+</head>
+<body>
+<!-- 控件，控制轮播图的位置 -->
+<div class="box" id="box">
+    <!-- 刚好显示一张图片，一定要有一个样式：overflow:hidden -->
+    <div class="inner">
+        <!-- 移动，宽度要足够 -->
+        <ul>
+            <li class="current"><a href="#"><img src="images/01.jpg" alt=""/></a></li>
+            <li><a href="#"><img src="images/02.jpg" alt=""/></a></li>
+            <li><a href="#"><img src="images/03.jpg" alt=""/></a></li>
+            <li><a href="#"><img src="images/04.jpg" alt=""/></a></li>
+            <li><a href="#"><img src="images/05.jpg" alt=""/></a></li>
+        </ul>
+
+        <!-- 小按钮 -->
+        <div class="square">
+            <span class="current">1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+        </div>
+    </div>
+</div>>
+<script>
+    var box=document.getElementById("box");
+    var inner=box.children[0];
+    var ul=inner.children[0];
+    var square=inner.children[1];
+    var spans=square.children;
+
+    var imgWidth=inner.offsetWidth;
+
+    for(var i=0;i<spans.length;i++){
+        var span=spans[i];
+        span.setAttribute("index",i);
+        span.onmouseover= function () {
+            for(var i=0;i<spans.length;i++){
+               spans[i].className="";
+            }
+            this.className="current";
+
+            var idx=this.getAttribute("index");
+            var target=-idx*imgWidth;
+            console.log(-idx*imgWidth);
+            animate(ul,target);
+        }
+
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #box{
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<input type="button" id="btn" value="500">
+<input type="button" id="btn1" value="1000">
+<div id="box"></div>
+<script>
+    var btn=document.getElementById("btn");
+    var btn1=document.getElementById("btn1");
+    var box=document.getElementById("box");
+
+    btn.onclick= function () {
+        animate(box,500);
+    };
+    btn1.onclick= function () {
+        animate(box,1000);
+    };
+
+    function animate (obj,target) {
+
+
+        if(obj.timer){
+            clearInterval(obj.timer);
+        }
+
+        obj.timer=setInterval(function(){
+            var leader=obj.offsetLeft;
+            var step=10;
+            if (leader > target) {
+                //说明目标我们的左侧，应该往左。
+                step = -step;
+            }
+            var distance = Math.abs(target - leader);
+            if(distance > Math.abs(step)) {
+                leader = leader + step;
+                obj.style.left = leader + "px";
+            }else{
+                clearInterval(obj.timer);
+                obj.style.left = target + "px";
+            }
+
+        },15);
+
+    };
+
+
+
+</script>
+</body>
+</html>

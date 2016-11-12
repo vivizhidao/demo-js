@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        ul {
+            list-style: none
+        }
+
+        img {
+            vertical-align: top
+        }
+
+        .box {
+            width: 490px;
+            height: 170px;
+            margin: 100px auto;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .inner {
+            width: 490px;
+            height: 170px;
+            background-color: pink;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .inner ul {
+            width: 1000%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .inner li {
+            float: left;
+        }
+
+        ol {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        ol li {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: #fff;
+            text-align: center;
+            line-height: 16px;
+            cursor: pointer;
+            margin-right:5px;
+        }
+
+        ol li.current {
+            background-color: orangered;
+            color: #fff;
+        }
+
+        #arr span {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            margin-top: -20px;
+            background: #000;
+            cursor: pointer;
+            line-height: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-family: '黑体';
+            font-size: 30px;
+            color: #fff;
+            opacity: 0.3;
+            border: 1px solid #fff;
+        }
+
+        #arr #right {
+            right: 0;
+            left: auto;
+        }
+    </style>
+    <script src="animate.js"></script>
+</head>
+<body>
+<!-- 控件，控制轮播图的位置 -->
+<div class="box" id="box">
+    <!-- 刚好显示一张图片，一定要有一个样式：overflow:hidden -->
+    <div class="inner">
+        <!-- 移动，宽度要足够 -->
+        <ul>
+            <li class="current"><a href="#"><img src="images/01.jpg" alt=""/></a></li>
+            <li><a href="#"><img src="images/02.jpg" alt=""/></a></li>
+            <li><a href="#"><img src="images/03.jpg" alt=""/></a></li>
+            <li><a href="#"><img src="images/04.jpg" alt=""/></a></li>
+            <li><a href="#"><img src="images/05.jpg" alt=""/></a></li>
+        </ul>
+
+        <!-- 小按钮 -->
+        <ol>
+
+        </ol>
+        <!--左右焦点-->
+        <div id="arr"><span id="left">&lt;</span><span id="right">&gt;</span></div>
+    </div>
+</div>>
+<script>
+    var box=document.getElementById("box");
+    var inner=box.children[0];
+    var ul=inner.children[0];
+    var ol=inner.children[1];
+
+
+    var arr = document.getElementById("arr");
+    var rightArr = document.getElementById("right");
+    var leftArr = document.getElementById("left");
+    var imgList=ul.children;
+
+    var imgWidth=inner.offsetWidth;
+
+    for (var i = 0; i < imgList.length; i++) {
+        //1.1.1 创建li
+        var li = document.createElement("li");
+        //1.1.2 给li设置内容，索引+1
+        li.innerHTML = i + 1;
+        //1.1.3 将li添加到ol里面
+        ol.appendChild(li);
+    }
+
+    var olList = ol.children;
+    //1.1.5 让olList第一个高亮
+    olList[0].className = "current";
+
+    //1.2 生成假图片
+    //1.2.1 克隆第一张图片
+    var clonePic = imgList[0].cloneNode(true);
+    ul.appendChild(clonePic);
+
+    for(var i=0;i<imgList.length;i++){
+        var lis=imgList[i];
+        lis.setAttribute("index",i);
+        lis.onmouseover= function () {
+            for(var i=0;i<imgList.length;i++){
+                imgList[i].className="";
+            }
+            this.className="current";
+
+            var idx=this.getAttribute("index");
+            var target=-idx*imgWidth;
+//            console.log(-idx*imgWidth);
+            animate(ul,target);
+        }
+
+    }
+
+
+    //功能2：鼠标经过按钮
+    //2.1 按钮排他
+    //2.1.1 给每一个按钮注册鼠标经过事件
+    for (var i = 0; i < olList.length; i++) {
+        var li = olList[i];
+        //2.2.2 设置index属性
+        li.setAttribute("index", i);
+
+        li.onmouseover = function () {
+            //2.1.2 按钮排他
+            //干掉所有人
+            for(var j = 0; j < olList.length; j++) {
+                olList[j].className = "";
+            }
+            //留下我自己
+            this.className = "current";
+
+
+            //2.2 图片移动
+            //2.2.1 获得图片的宽度，全局变量：imgWidth
+            //2.2.3 获取图片的移动数量
+            var idx = this.getAttribute("index");
+            //2.2.4 移动图片
+            animate(ul, -idx * imgWidth);
+        };
+    }
+    //1. 鼠标经过box，箭头显示
+    box.onmouseover = function () {
+        arr.style.display = "block";
+    };
+
+    //2. 鼠标离开box，箭头隐藏
+    box.onmouseout = function () {
+        arr.style.display = "none";
+    };
+
+    //3. 点击右箭头
+    var pic = 0;//要移动的图片的张数
+    rightArr.onclick = function () {
+
+        //如果是最后一张的时候，赶紧把left改成0,pic改成0
+        if (pic == imgList.length - 1) {
+            pic = 0;
+            ul.style.left = "0px";
+        }
+
+        pic++;
+        //图片往左移，负数
+        var target = -pic * imgWidth;
+        animate(ul, target);
+        console.log(target);
+
+
+    };
+    //4. 点击左箭头
+    leftArr.onclick = function () {
+
+        if (pic == 0) {
+            pic = imgList.length - 1;
+            ul.style.left = -pic * imgWidth + "px";
+        }
+
+
+        pic--;
+        // 图片永远都是往左移的，不同的是移动的图片的张数
+        var target = -pic * imgWidth;
+        animate(ul, target);
+        console.log(target);
+
+
+    };
+
+    //功能4： 自动播放
+    //4.1 自动播放
+    timer = setInterval(function () {
+        //这就是事件触发
+        rightArr.click();
+    }, 2000);
+</script>
+</body>
+</html>

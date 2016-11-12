@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #box{
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<input type="button" id="btn" value="动">
+<div id="box"></div>
+<script>
+    var btn=document.getElementById("btn");
+    var box=document.getElementById("box");
+
+    btn.onclick= function () {
+        var timer=setInterval(function(){
+            var leader=box.offsetLeft;
+            var step=10;
+            if(leader < 400) {
+                leader = leader + step;
+                box.style.left = leader + "px";
+            }else{
+                clearTimeout(timer);
+            }
+
+        },15);
+
+    };
+
+
+
+</script>
+</body>
+</html>

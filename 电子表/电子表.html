@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>clock</title>
+    <style>
+        #box {
+            width: 400px;
+            height: 50px;
+            background-color: lightpink;
+            border: 2px solid lightskyblue;
+            margin: 100px auto;
+            font: bold 24px/50px 微软雅黑;
+            text-align: center;
+            color: mediumblue;
+        }
+    </style>
+    <script src="timer.js"></script>
+</head>
+<body>
+<div id="box"></div>
+<script>
+
+    var box = document.getElementById("box");
+    setInterval(function () {
+        var timeStr = getTime();
+        box.innerHTML = timeStr;
+    }, 1000);
+
+
+</script>
+</body>
+</html>
